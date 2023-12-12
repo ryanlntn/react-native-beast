@@ -1,14 +1,14 @@
 import * as React from 'react';
 
-import { StyleSheet, View, Text } from 'react-native';
-import { multiply } from 'react-native-beast';
+import { StyleSheet, Text, View } from 'react-native';
+import { multiply, start } from 'react-native-beast';
 
 const result = multiply(3, 7);
 
 export default function App() {
   return (
     <View style={styles.container}>
-      <Text>Result: {result}</Text>
+      <Text onPress={start}>Result: {result}</Text>
     </View>
   );
 }

@@ -11,6 +11,12 @@ RCT_EXPORT_MODULE()
     return result;
 }
 
+- (NSNumber *)start {
+    NSNumber *result = @(beast::start());
+
+    return result;
+}
+
 - (std::shared_ptr<facebook::react::TurboModule>)getTurboModule:
     (const facebook::react::ObjCTurboModule::InitParams &)params
 {
