@@ -5,11 +5,9 @@ RCT_EXPORT_MODULE()
 
 // Don't compile this code when we build for the old architecture.
 #ifdef RCT_NEW_ARCH_ENABLED
-- (NSNumber *)multiply:(double)a b:(double)b {
-    NSNumber *result = @(beast::multiply(a, b));
-
-    return result;
-}
+//- (void)createWebSocketServer {
+//    beast::createWebSocketServer();
+//}
 
 - (NSNumber *)start {
     NSNumber *result = @(beast::start());

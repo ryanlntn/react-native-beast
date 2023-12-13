@@ -1,15 +1,13 @@
 import * as React from 'react';
 
-import { StyleSheet, Text, View } from 'react-native';
-import { multiply, start } from 'react-native-beast';
-
-const result = multiply(3, 7);
+import { Button, ScrollView, StyleSheet } from 'react-native';
+import { start } from 'react-native-beast';
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text onPress={start}>Result: {result}</Text>
-    </View>
+    <ScrollView contentContainerStyle={styles.container}>
+      <Button onPress={() => start()} title="Start WebSocketServer" />
+    </ScrollView>
   );
 }
 
@@ -18,10 +16,5 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  box: {
-    width: 60,
-    height: 60,
-    marginVertical: 20,
   },
 });

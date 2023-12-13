@@ -3,7 +3,6 @@
 
 namespace beast
 {
-  double multiply(double a, double b);
   int start();
 }
 

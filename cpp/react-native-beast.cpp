@@ -13,10 +13,10 @@
 #include <thread>
 #include <vector>
 
-namespace http = boost::beast::http;						// from <boost/beast/http.hpp>
+namespace http = boost::beast::http;					 // from <boost/beast/http.hpp>
 namespace websocket = boost::beast::websocket; // from <boost/beast/websocket.hpp>
-namespace net = boost::asio;						// from <boost/asio.hpp>
-using tcp = boost::asio::ip::tcp;				// from <boost/asio/ip/tcp.hpp>
+namespace net = boost::asio;									 // from <boost/asio.hpp>
+using tcp = boost::asio::ip::tcp;							 // from <boost/asio/ip/tcp.hpp>
 
 //------------------------------------------------------------------------------
 
@@ -30,7 +30,7 @@ void fail(boost::beast::error_code ec, char const *what)
 class session : public std::enable_shared_from_this<session>
 {
 	websocket::stream<boost::beast::tcp_stream> ws_;
-    boost::beast::flat_buffer buffer_;
+	boost::beast::flat_buffer buffer_;
 
 public:
 	// Take ownership of the socket
@@ -48,7 +48,7 @@ public:
 		// for single-threaded contexts, this example code is written to be
 		// thread-safe by default.
 		net::dispatch(ws_.get_executor(),
-                      boost::beast::bind_front_handler(
+									boost::beast::bind_front_handler(
 											&session::on_run,
 											shared_from_this()));
 	}
@@ -60,7 +60,7 @@ public:
 		// Set suggested timeout settings for the websocket
 		ws_.set_option(
 				websocket::stream_base::timeout::suggested(
-                                                           boost::beast::role_type::server));
+						boost::beast::role_type::server));
 
 		// Set a decorator to change the Server of the handshake
 		ws_.set_option(websocket::stream_base::decorator(
@@ -72,7 +72,7 @@ public:
 				}));
 		// Accept the websocket handshake
 		ws_.async_accept(
-                         boost::beast::bind_front_handler(
+				boost::beast::bind_front_handler(
 						&session::on_accept,
 						shared_from_this()));
 	}
@@ -93,14 +93,14 @@ public:
 		// Read a message into our buffer
 		ws_.async_read(
 				buffer_,
-                       boost::beast::bind_front_handler(
+				boost::beast::bind_front_handler(
 						&session::on_read,
 						shared_from_this()));
 	}
 
 	void
 	on_read(
-            boost::beast::error_code ec,
+			boost::beast::error_code ec,
 			std::size_t bytes_transferred)
 	{
 		boost::ignore_unused(bytes_transferred);
@@ -116,14 +116,14 @@ public:
 		ws_.text(ws_.got_text());
 		ws_.async_write(
 				buffer_.data(),
-                        boost::beast::bind_front_handler(
+				boost::beast::bind_front_handler(
 						&session::on_write,
 						shared_from_this()));
 	}
 
 	void
 	on_write(
-             boost::beast::error_code ec,
+			boost::beast::error_code ec,
 			std::size_t bytes_transferred)
 	{
 		boost::ignore_unused(bytes_transferred);
@@ -153,7 +153,7 @@ public:
 			tcp::endpoint endpoint)
 			: ioc_(ioc), acceptor_(ioc)
 	{
-        boost::beast::error_code ec;
+		boost::beast::error_code ec;
 
 		// Open the acceptor
 		acceptor_.open(endpoint.protocol(), ec);
@@ -180,8 +180,7 @@ public:
 		}
 
 		// Start listening for connections
-		acceptor_.listen(
-				net::socket_base::max_listen_connections, ec);
+		acceptor_.listen(net::socket_base::max_listen_connections, ec);
 		if (ec)
 		{
 			fail(ec, "listen");
@@ -203,7 +202,7 @@ private:
 		// The new connection gets its own strand
 		acceptor_.async_accept(
 				net::make_strand(ioc_),
-                               boost::beast::bind_front_handler(
+				boost::beast::bind_front_handler(
 						&listener::on_accept,
 						shared_from_this()));
 	}
@@ -227,10 +226,6 @@ private:
 };
 namespace beast
 {
-	double multiply(double a, double b)
-	{
-		return a * b;
-	}
 	int start()
 	{
 		auto const address = net::ip::make_address("0.0.0.0");

@@ -23,12 +23,12 @@ public class BeastModule extends NativeBeastSpec {
     System.loadLibrary("cpp");
   }
 
-  private static native double nativeMultiply(double a, double b);
+  private static native int nativeStart();
 
   // Example method
   // See https://reactnative.dev/docs/native-modules-android
   @Override
-  public double multiply(double a, double b) {
-    return nativeMultiply(a, b);
+  public int start() {
+    return nativeStart();
   }
 }
