@@ -5,10 +5,6 @@ RCT_EXPORT_MODULE()
 
 // Don't compile this code when we build for the old architecture.
 #ifdef RCT_NEW_ARCH_ENABLED
-//- (void)createWebSocketServer {
-//    beast::createWebSocketServer();
-//}
-
 - (NSNumber *)start {
     NSNumber *result = @(beast::start());
 
