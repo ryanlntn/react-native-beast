@@ -5,4 +5,4 @@ export interface Spec extends TurboModule {
   start(): number;
 }
 
-export default TurboModuleRegistry.getEnforcing<Spec>('Beast');
+export default TurboModuleRegistry.get<Spec>('Beast');

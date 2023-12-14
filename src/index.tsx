@@ -1,5 +1,6 @@
-const Beast = require('./NativeBeast').default;
+const { NativeModules } = require('react-native');
+const Beast = NativeModules.Beast ?? require('./NativeBeast').default;
 
-export function start(): number {
-  return Beast.start();
+export function start() {
+  Beast.start();
 }
