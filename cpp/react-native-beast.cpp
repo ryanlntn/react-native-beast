@@ -1,5 +1,5 @@
 #include "react-native-beast.h"
-
+#include "macros.h"
 #include <boost/beast/core.hpp>
 #include <boost/beast/websocket.hpp>
 #include <boost/asio/dispatch.hpp>
@@ -17,6 +17,8 @@ namespace http = boost::beast::http;					 // from <boost/beast/http.hpp>
 namespace websocket = boost::beast::websocket; // from <boost/beast/websocket.hpp>
 namespace net = boost::asio;									 // from <boost/asio.hpp>
 using tcp = boost::asio::ip::tcp;							 // from <boost/asio/ip/tcp.hpp>
+using namespace std;
+using namespace facebook;
 
 //------------------------------------------------------------------------------
 
@@ -224,31 +226,49 @@ private:
 		do_accept();
 	}
 };
+
 namespace beast
 {
-	int start()
+	std::shared_ptr<react::CallInvoker> invoker;
+
+	void install(jsi::Runtime &rt, std::shared_ptr<react::CallInvoker> jsCallInvoker)
 	{
-		auto const address = net::ip::make_address("0.0.0.0");
-		auto const port = static_cast<unsigned short>(9999);
-		auto const threads = 1;
+		auto createWebSocketServer = HOSTFN("createWebSocketServer", 2)
+		{
+			auto const address = net::ip::make_address("0.0.0.0");
+			auto const port = static_cast<unsigned short>(args[0].asNumber());
+			auto const threads = (int)args[1].asNumber();
 
-		// The io_context is required for all I/O
-		net::io_context ioc{threads};
+			// The io_context is required for all I/O
+			net::io_context ioc{threads};
 
-		// Create and launch a listening port
-		std::make_shared<listener>(ioc, tcp::endpoint{address, port})->run();
+			// Create and launch a listening port
+			std::make_shared<listener>(ioc, tcp::endpoint{address, port})->run();
 
-		// Run the I/O service on the requested number of threads
-		std::vector<std::thread> v;
-		v.reserve(threads - 1);
-		for (auto i = threads - 1; i > 0; --i)
-			v.emplace_back(
-					[&ioc]
-					{
-						ioc.run();
-					});
-		ioc.run();
+			// Run the I/O service on the requested number of threads
+			std::vector<std::thread> v;
+			v.reserve(threads - 1);
+			for (auto i = threads - 1; i > 0; --i)
+				v.emplace_back(
+						[&ioc]
+						{
+							ioc.run();
+						});
+			ioc.run();
 
-		return EXIT_SUCCESS;
+			return {};
+		});
+
+		auto test = HOSTFN("test", 0)
+		{
+			return jsi::String::createFromAscii(rt, "test");
+		});
+
+		jsi::Object module = jsi::Object(rt);
+
+		module.setProperty(rt, "createWebSocketServer", move(createWebSocketServer));
+		module.setProperty(rt, "test", move(test));
+
+		rt.global().setProperty(rt, "__BeastProxy", move(module));
 	}
 }

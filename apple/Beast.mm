@@ -1,20 +1,38 @@
 #import "Beast.h"
 
+#import <React/RCTBridge+Private.h>
+
+#import <React/RCTUtils.h>
+#import <ReactCommon/RCTTurboModule.h>
+#import <jsi/jsi.h>
+
+#import "../cpp/react-native-beast.h"
+
 @implementation Beast
 
-RCT_EXPORT_MODULE()
+RCT_EXPORT_MODULE(Beast)
 
-RCT_EXPORT_METHOD(start) {
-    beast::start();
-}
 
-// Don't compile this code when we build for the old architecture.
-#ifdef RCT_NEW_ARCH_ENABLED
-- (std::shared_ptr<facebook::react::TurboModule>)getTurboModule:
-    (const facebook::react::ObjCTurboModule::InitParams &)params
-{
-    return std::make_shared<facebook::react::NativeBeastSpecJSI>(params);
+RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(install) {
+  NSLog(@"Installing Beast module...");
+
+  RCTBridge *bridge = [RCTBridge currentBridge];
+  RCTCxxBridge *cxxBridge = (RCTCxxBridge *)bridge;
+  if (cxxBridge == nil) {
+    return @false;
+  }
+
+  using namespace facebook;
+
+  auto jsiRuntime = (jsi::Runtime *)cxxBridge.runtime;
+  if (jsiRuntime == nil) {
+    return @false;
+  }
+  auto &runtime = *jsiRuntime;
+  auto callInvoker = bridge.jsCallInvoker;
+
+  beast::install(runtime, callInvoker);
+  return @true;
 }
-#endif
 
 @end

@@ -1,15 +1,8 @@
-#ifdef __cplusplus
-#import "react-native-beast.h"
-#endif
-
-#ifdef RCT_NEW_ARCH_ENABLED
-#import "RNBeastSpec.h"
-
-@interface Beast : NSObject <NativeBeastSpec>
-#else
 #import <React/RCTBridgeModule.h>
+#import <React/RCTInvalidating.h>
 
-@interface Beast : NSObject <RCTBridgeModule>
-#endif
+@interface Beast : NSObject <RCTBridgeModule, RCTInvalidating>
+
+@property(nonatomic, assign) BOOL setBridgeOnMainQueue;
 
 @end

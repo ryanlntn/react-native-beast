@@ -1,9 +1,10 @@
-#ifndef BEAST_H
-#define BEAST_H
+#include <jsi/jsilib.h>
+#include <jsi/jsi.h>
+#include <ReactCommon/CallInvoker.h>
+
+using namespace facebook;
 
 namespace beast
 {
-  int start();
+  void install(jsi::Runtime &rt, std::shared_ptr<react::CallInvoker> jsCallInvoker);
 }
-
-#endif /* BEAST_H */
